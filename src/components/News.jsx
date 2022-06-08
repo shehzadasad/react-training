@@ -4,6 +4,7 @@ import '../App.css'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import PulseLoader from 'react-spinners/PulseLoader'
+import dateFormat from 'dateformat'
 
 export class News extends Component {
   constructor() {
@@ -11,7 +12,7 @@ export class News extends Component {
     console.log('News Component constructor says hello to you! <3')
     this.state = {
       items: [],
-      DataisLoaded: false,
+      detailsLoaded: false,
     }
     AOS.init({
       duration: 2000,
@@ -31,36 +32,23 @@ export class News extends Component {
     )
       .then((res) => res.json())
       .then((json) => {
+        console.log(json)
         this.setState({
           items: json.articles,
-          DataisLoaded: true,
+          detailsLoaded: true,
         })
       })
   }
 
   render() {
-    function tConvert(time) {
-      // Check correct time format and split into components
-      time = time
-        .toString()
-        .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time]
-
-      if (time.length > 1) {
-        // If time format correct
-        time = time.slice(1) // Remove full string match value
-        time[5] = +time[0] < 12 ? ' AM' : ' PM' // Set AM/PM
-        time[0] = +time[0] % 12 || 12 // Adjust hours
-      }
-      return time.join('') // return adjusted time or original string
-    }
-    const { DataisLoaded, items } = this.state
-    if (!DataisLoaded)
+    const { detailsLoaded, items } = this.state
+    if (!detailsLoaded)
       return (
         <>
           <div className="container p-5">
             <div className="row justify-content-center align-items-center p-5">
               <div className="col-12 text-center">
-                <PulseLoader color={'maroon'} size={25} margin={3} />
+                <PulseLoader color={'blue'} size={25} margin={3} />
               </div>
             </div>
           </div>
@@ -91,12 +79,16 @@ export class News extends Component {
                   }
                   newsURL={element.url ? element.url : ''}
                   date={
-                    element.publishedAt ? element.publishedAt.slice(0, 10) : ''
+                    // element.publishedAt ? element.publishedAt.slice(0, 10) : ''
+                    element.publishedAt
+                      ? dateFormat(element.publishedAt, 'mmmm dS, yyyy')
+                      : ''
                   }
                   source={element.source ? element.source.name : ''}
                   time={
+                    // element.publishedAt ? tConvert(element.publishedAt.slice(11, 16)): ''
                     element.publishedAt
-                      ? tConvert(element.publishedAt.slice(11, 19))
+                      ? new Date(element.publishedAt).toLocaleTimeString()
                       : ''
                   }
                 />
