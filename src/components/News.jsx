@@ -9,7 +9,6 @@ import dateFormat from 'dateformat'
 export class News extends Component {
   constructor() {
     super()
-    console.log('News Component constructor says hello to you! <3')
     this.state = {
       items: [],
       detailsLoaded: false,
@@ -32,7 +31,6 @@ export class News extends Component {
     )
       .then((res) => res.json())
       .then((json) => {
-        console.log(json)
         this.setState({
           items: json.articles,
           detailsLoaded: true,
