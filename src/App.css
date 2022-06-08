@@ -11,3 +11,9 @@
     rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
   transform: scale(1.1);
 }
+.active {
+  background: blue;
+  color: white;
+  width: fit-content;
+  padding: 8px;
+}

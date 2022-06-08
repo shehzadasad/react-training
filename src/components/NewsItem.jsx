@@ -12,7 +12,7 @@ export class NewsItem extends Component {
             height={'200pt'}
             src={imgSrc}
             className="card-img-top"
-            alt="Image"
+            alt=""
           />
           <div className="card-body">
             <h5 className="card-title">{title}</h5>
@@ -29,7 +29,12 @@ export class NewsItem extends Component {
             >
               {description}...
             </p>
-            <a href={newsURL} target="_blank" className="btn btn-primary">
+            <a
+              href={newsURL}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-primary"
+            >
               View More
             </a>
           </div>
