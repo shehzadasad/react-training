@@ -29,7 +29,7 @@ export default class App extends Component {
               path="/"
               element={
                 <>
-                  <News />
+                  <News pageSize={8} />
                 </>
               }
             />

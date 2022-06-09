@@ -13,7 +13,6 @@ export class News extends Component {
       items: [],
       detailsLoaded: false,
       page: 1,
-      disableNext: false,
     }
     AOS.init({
       duration: 2000,
@@ -29,7 +28,7 @@ export class News extends Component {
 
   async componentDidMount() {
     await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=af7f02c88a1442a0a2405dd55cea4545&page=${this.state.page}&pageSize=20`,
+      `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=af7f02c88a1442a0a2405dd55cea4545&page=${this.state.page}&pageSize=${this.props.pageSize}`,
     )
       .then((res) => res.json())
       .then((json) => {
@@ -43,18 +42,18 @@ export class News extends Component {
 
   handleNextClick = async () => {
     window.scrollTo(0, 0)
-    if (this.state.page + 1 > Math.ceil(this.state.totalResults / 20)) {
-      this.setState({
-        disableNext: true,
-      })
+    if (
+      this.state.page + 1 >
+      Math.ceil(this.state.totalResults / this.props.pageSize)
+    ) {
     } else {
       this.setState({
-        disableNext: false,
+        detailsLoaded: false,
       })
       await fetch(
         `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=af7f02c88a1442a0a2405dd55cea4545&page=${
           this.state.page + 1
-        }&pageSize=20`,
+        }&pageSize=${this.props.pageSize}`,
       )
         .then((res) => res.json())
         .then((json) => {
@@ -70,12 +69,13 @@ export class News extends Component {
   handlePrevClick = async () => {
     window.scrollTo(0, 0)
     this.setState({
-      disableNext: false,
+      detailsLoaded: false,
     })
+
     await fetch(
       `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=af7f02c88a1442a0a2405dd55cea4545&page=${
         this.state.page - 1
-      }&pageSize=20`,
+      }&pageSize=${this.props.pageSize}`,
     )
       .then((res) => res.json())
       .then((json) => {
@@ -104,7 +104,7 @@ export class News extends Component {
     return (
       <div className=" container">
         <h2 className=" fs-1 fw-bold mt-5 text-center">
-          NewsMonkey - Top Headlines
+          NewsMonkey - Top Headlines | Page#{this.state.page}
         </h2>
 
         <div className=" row justify-content-center p-5">
@@ -155,7 +155,10 @@ export class News extends Component {
             <i className="bi bi-chevron-double-left"></i> Prev
           </button>
           <button
-            disabled={this.state.disableNext === true}
+            disabled={
+              this.state.page + 1 >
+              Math.ceil(this.state.totalResults / this.props.pageSize)
+            }
             onClick={this.handleNextClick}
             type="button"
             className="btn rounded btn-primary px-5"
